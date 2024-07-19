@@ -4,17 +4,17 @@ const bookSchema = new Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "title is required"],
       trim: true,
     },
     content: {
       type: String,
-      required: true,
+      required: [true, "content is required"],
       trim: true,
     },
     author: {
       type: String,
-      required: true,
+      required: [true, "author is required"],
       trim: true,
     },
     publishedDate: {

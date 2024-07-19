@@ -4,11 +4,12 @@ const authorSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "name is required"],
       trim: true,
     },
     bio: {
       type: String,
+      required: [true, "bio is required"],
       trim: true,
     },
     birthDate: {
@@ -17,7 +18,8 @@ const authorSchema = new Schema(
     books: {
       type: [Types.ObjectId],
       ref: "Book",
-      required: true,
+      required: [true, "books is required"],
+      trim: true,
     },
   },
   { timestamps: true, versionKey: false }

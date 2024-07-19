@@ -1,33 +1,42 @@
 import Book from "../../../database/models/book.model.js";
+import { AppError, catchAsyncError } from "../../utils/error.js";
 
-const addBook = async (req, res) => {
+const addBook = catchAsyncError(async (req, res) => {
   const book = await Book.create(req.body);
   res.status(201).json({ message: "success", book });
-};
+});
 
-const getAllBooks = async (req, res) => {
+const getAllBooks = catchAsyncError(async (req, res) => {
   const { page = 1, limit = 10 } = req.query;
   const books = await Book.find()
     .skip((page - 1) * limit)
     .limit(+limit);
+    if (books.length === 0) throw new AppError("There are no books have added yet", 404);
   res.status(200).json({ message: "success", books });
-};
-const getBookById = async (req, res) => {
+});
+
+const getBookById = catchAsyncError(async (req, res) => {
   const { bookId } = req.params;
   const book = await Book.findById(bookId);
+  if (!book) throw new AppError("Book doesn't exist", 404);
   res.status(200).json({ message: "success", book });
-};
-const updateBookById = async (req, res) => {
+});
+
+const updateBookById = catchAsyncError(async (req, res) => {
   const { bookId } = req.params;
   const book = await Book.findByIdAndUpdate(bookId, req.body, { new: true });
+  if (!book) throw new AppError("Book doesn't exist", 404);
   res.status(200).json({ message: "success", book });
-};
-const deleteBookById = async (req, res) => {
+});
+
+const deleteBookById = catchAsyncError(async (req, res) => {
   const { bookId } = req.params;
   const book = await Book.findByIdAndDelete(bookId);
+  if (!book) throw new AppError("Book doesn't exist", 404);
   res.status(200).json({ message: "success", book });
-};
-const searchBookByTitleOrAuthor = async (req, res) => {
+});
+
+const searchBookByTitleOrAuthor = catchAsyncError(async (req, res) => {
   const { key } = req.params;
   const book = await Book.find({
     $or: [
@@ -36,7 +45,7 @@ const searchBookByTitleOrAuthor = async (req, res) => {
     ],
   });
   res.status(200).json({ message: "success", book });
-};
+});
 
 export {
   addBook,
